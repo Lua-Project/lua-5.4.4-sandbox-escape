@@ -1,4 +1,4 @@
-From ubuntu:20.04
+FROM ubuntu:20.04
 
 # Create LUA directory
 RUN mkdir -p /LUA
