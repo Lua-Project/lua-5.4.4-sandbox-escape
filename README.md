@@ -1,5 +1,8 @@
 # lua-5.4.4-sandbox-escape
 
+It is an exploit and Docker created by applying the sandbox escape exploit code that existed in the previous version 5.2.4 to version 5.4.4.
+
+
 ### Create docker image
 
 ```sh
@@ -148,7 +151,7 @@ docker run -it lua-5.4.4-escape/x64:latest /bin/bash
 
 
 
-- OP_LOADI code
+- Addition OP_LOADI code
 
     Looking at the foo function that exists in the existing code, an integer value is put into the a variable. In version 5.2.4, the LOADK command is used to do this. However, since version 5.4.4 uses the LOADI command to handle integer assignment, it was possible to induce the use of the LOADK command by changing the integer assignment to a string assignment.
     
@@ -171,7 +174,7 @@ docker run -it lua-5.4.4-escape/x64:latest /bin/bash
     end
     ```
 
-- global_State, lua_State structure size change
+- Changing size of global_State, lua_State structure
 
     When running the existing exploit, to create fake global_State and fake lua_State, a string is created as much as the size of the structure. At this time, the size of the structure changes and this is reflected.
     
@@ -187,7 +190,7 @@ docker run -it lua-5.4.4-escape/x64:latest /bin/bash
     ```
 
 
-- tcache bins clean (Ubuntu glibc ptmalloc)
+- Cleaning tcache bins (Ubuntu glibc ptmalloc)
 
     In the luaM_newvectorchekced function, the malloc function is called and the chunk of variable k is allocated. At this time, if the tcache bin is full, the desired chunk is not allocated and the exploit fails. Because of this, we allocate a variable and empty the chunk that exists in the tcache bin.
     
@@ -220,4 +223,4 @@ docker run -it lua-5.4.4-escape/x64:latest /bin/bash
 
 ### Reference
 
-[https://github.com/erezto/lua-sandbox-escape](https://github.com/erezto/lua-sandbox-escape)
+    [https://github.com/erezto/lua-sandbox-escape](https://github.com/erezto/lua-sandbox-escape)
